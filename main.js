@@ -1,49 +1,45 @@
-function Cidade(cidade, populacao, idade, estado) {
-    this.cidade = cidade;
+function Pais(pais, estados, idade) {
+    this.pais = pais;
 
-    let _populacao = populacao;
+    let _estados = estados;
 
-    this.getPopulacao = function () {
-        return _populacao;
+    this.getEstados = function () {
+        return _estados;
     }
 
-    this.setPopulacao = function(valor) {
+    this.setEstados = function(valor) {
         if (typeof valor === 'number') {
-            _populacao = valor;
+            _estados = valor;
         }
     }
 
     this.idade = idade;
+}
+
+function Estado(estado, idadeEstado, pais, cidades) {
+    Pais.call(this, pais.pais, pais.getEstados(), pais.idade);
     this.estado = estado;
-
+    this.idadeEstado = idadeEstado;
+    this.cidades = cidades;
 }
 
-function Bairro(bairro, cidade, mercados) {
-    Cidade.call(this, cidade.cidade, cidade.populacao, cidade.idade, cidade.estado);
-    this.bairro = bairro;
-    this.mercados = mercados;
+Estado.prototype = Object.create(Pais.prototype);
+Estado.prototype.constructor = Estado;
+
+function Cidade(cidade, idadeCidade, populacao, estado) {
+    Estado.call(this, estado.estado, estado.idadeEstado, estado, estado.cidades);
+    this.cidade = cidade;
+    this.idadeCidade = idadeCidade;
+    this.populacao = populacao;
 }
 
-Bairro.prototype = Object.create(Cidade.prototype);
-Bairro.prototype.constructor = Bairro;
+Cidade.prototype = Object.create(Estado.prototype);
+Cidade.prototype.constructor = Cidade;
 
-function Mercado(mercado, produtos, rua, numero, bairro) {
-    Bairro.call(this, bairro.bairro, bairro, bairro.mercados);
-    this.mercado = mercado;
-    this.produtos = produtos;
-    this.rua = rua;
-    this.numero = numero;
-}
-
-Mercado.prototype = Object.create(Bairro.prototype);
-Mercado.prototype.constructor = Mercado;
+const pais1 = new Pais("Brasil", 26, 200);
+const estado1 = new Estado("Mato Grosso do Sul", 47, pais1, 79);
+const cidade1 = new Cidade('Caarapó', 65, 30000, estado1);
 
 
-const cidade1 = new Cidade("Caarapó", 30000, 60, "Mato Grosso do Sul");
-const bairro1 = new Bairro("Capitão Vigário", cidade1, 3);
-const mercado1 = new Mercado("Antunes", ["Secos", "Molhados", "Frios"], "Manoel Bandeira", 1192, bairro1);
-const mercado2 = new Mercado("Pão na hora", ["Confeitaria", "Padaria", "Café da manhã"], "Osvald Andrade", 1244, bairro1);
-
-console.log(mercado1);
-console.log(mercado2);
-//console.log(cidade1.getPopulacao());
+console.log(cidade1);
+console.log(pais1.getEstados());
